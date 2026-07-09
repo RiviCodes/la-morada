@@ -1,0 +1,41 @@
+---
+const WHATSAPP_NUMBER = "527971000165"; // TODO: tu número real, formato 52 + 10 dígitos, sin espacios ni signos
+const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("¡Hola! Vi el sitio de La Morada y me gustaría más información 🌲")}`;
+---
+
+<header
+  class="sticky top-0 z-40 border-b border-canvas/10 bg-ink/80 backdrop-blur-md"
+>
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+    <a href="/" class="flex flex-col items-center">
+      <img src="/logo.png" alt="Logo de La Morada" class="h-auto w-7" />
+      <img src="/banner.png" alt="" class="h-auto w-22 pl-2" />
+    </a>
+
+    <nav
+      class="hidden items-center gap-8 font-body text-sm text-canvas md:flex"
+    >
+      <a
+        href="#galeria"
+        class="transition underline underline-offset-4 decoration-0 text-canvas tracking-widest"
+        >GALERÍA</a
+      >
+      <a href="#sobre" class="transition text-canvas tracking-widest"
+        >EL LUGAR</a
+      >
+      <a href="#contacto" class="transition text-canvas tracking-widest"
+        >CONTACTO</a
+      >
+    </nav>
+
+    <a
+      href={whatsappHref}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center gap-2 rounded-full bg-canvas px-4 py-2 text-sm font-medium text-line transition hover:bg-muted"
+    >
+      <img src="/whatsapp-icon.png" alt="WhatsApp" class="h-5 w-5" />
+      <span class="tracking-wide">WhatsApp</span>
+    </a>
+  </div>
+</header>

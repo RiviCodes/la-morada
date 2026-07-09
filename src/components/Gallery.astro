@@ -1,0 +1,186 @@
+---
+import IconButton from "./IconButton.astro";
+import { getPhotos } from "../lib/getPhotos";
+
+const photos = getPhotos("gallery");
+---
+
+<section id="galeria" class="py-24">
+  <div class="mx-auto max-w-6xl px-6">
+    <p class="font-mono text-xs uppercase tracking-[0.3em] text-canvas">
+      Galería
+    </p>
+    <h2 class="mt-3 text-3xl text-canvas font-display md:text-4xl">
+      Así se ve La Morada
+    </h2>
+
+    {
+      photos.length === 0 ? (
+        <p class="mt-8 text-stone">Todavía no hay fotos en public/gallery/.</p>
+      ) : (
+        <div class="relative mt-10">
+          <div
+            id="carousel-track"
+            class="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {photos.map((photo, i) => (
+              <button
+                type="button"
+                class="gallery-item aspect-4/3 w-[78%] flex-none snap-start overflow-hidden rounded-sm sm:w-[46%] lg:w-[31%]"
+                data-index={i}
+                aria-label={`Ampliar foto: ${photo.alt}`}
+              >
+                <img
+                  src={photo.src}
+                  alt={photo.alt}
+                  class="h-full w-full object-cover select-none"
+                />
+              </button>
+            ))}
+          </div>
+
+          <IconButton
+            id="carousel-prev"
+            variant="prev"
+            label="Foto anterior"
+            class="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          />
+          <IconButton
+            id="carousel-next"
+            variant="next"
+            label="Foto siguiente"
+            class="absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2"
+          />
+        </div>
+      )
+    }
+  </div>
+
+  <dialog
+    id="lightbox"
+    class="m-auto max-h-[90vh] max-w-[92vw] overflow-hidden border-0 bg-transparent p-0 backdrop:bg-ink/90"
+  >
+    <div
+      class="relative flex max-h-[90vh] max-w-[92vw] items-center justify-center"
+    >
+      <img
+        id="lightbox-img"
+        src=""
+        alt=""
+        class="max-h-[85vh] max-w-[90vw] rounded-sm object-contain select-none"
+      />
+      <IconButton
+        id="lightbox-close"
+        variant="close"
+        label="Cerrar"
+        class="absolute top-3 right-3"
+      />
+      <IconButton
+        id="lightbox-prev"
+        variant="prev"
+        label="Foto anterior"
+        class="absolute left-3 top-1/2 -translate-y-1/2"
+      />
+      <IconButton
+        id="lightbox-next"
+        variant="next"
+        label="Foto siguiente"
+        class="absolute right-3 top-1/2 -translate-y-1/2"
+      />
+    </div>
+  </dialog>
+</section>
+
+<script>
+  const galeriaSection = document.getElementById("galeria");
+  const items = Array.from(
+    galeriaSection?.querySelectorAll<HTMLButtonElement>(".gallery-item") ?? [],
+  );
+
+  const photos = items.map((el) => {
+    const img = el.querySelector("img")!;
+    return { src: img.src, alt: img.alt };
+  });
+
+  let currentIndex = 0;
+  let loadToken = 0;
+
+  const track = document.getElementById("carousel-track");
+  function scrollByOneCard(direction: 1 | -1) {
+    const cardWidth =
+      track?.firstElementChild?.getBoundingClientRect().width ?? 300;
+    track?.scrollBy({ left: direction * (cardWidth + 16), behavior: "smooth" });
+  }
+  document
+    .getElementById("carousel-prev")
+    ?.addEventListener("click", () => scrollByOneCard(-1));
+  document
+    .getElementById("carousel-next")
+    ?.addEventListener("click", () => scrollByOneCard(1));
+
+  const lightbox = document.getElementById(
+    "lightbox",
+  ) as HTMLDialogElement | null;
+  const lightboxImg = document.getElementById(
+    "lightbox-img",
+  ) as HTMLImageElement | null;
+
+  function showPhoto(index: number) {
+    if (!lightboxImg || photos.length === 0) return;
+    currentIndex = (index + photos.length) % photos.length;
+    const target = photos[currentIndex];
+    const myToken = ++loadToken;
+
+    const preloader = new Image();
+    preloader.src = target.src;
+
+    const applyImage = () => {
+      if (myToken !== loadToken) return;
+      lightboxImg.src = target.src;
+      lightboxImg.alt = target.alt;
+    };
+
+    if (preloader.decode) {
+      preloader.decode().then(applyImage).catch(applyImage);
+    } else {
+      applyImage();
+    }
+  }
+
+  function openLightbox(index: number) {
+    showPhoto(index);
+    document.body.style.overflow = "hidden";
+    lightbox?.showModal();
+  }
+
+  items.forEach((el, i) => el.addEventListener("click", () => openLightbox(i)));
+
+  document
+    .getElementById("lightbox-close")
+    ?.addEventListener("click", () => lightbox?.close());
+  document
+    .getElementById("lightbox-prev")
+    ?.addEventListener("click", () => showPhoto(currentIndex - 1));
+  document
+    .getElementById("lightbox-next")
+    ?.addEventListener("click", () => showPhoto(currentIndex + 1));
+
+  lightbox?.addEventListener("click", (e) => {
+    if (e.target === lightbox) lightbox.close();
+  });
+
+  lightbox?.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      showPhoto(currentIndex - 1);
+    }
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      showPhoto(currentIndex + 1);
+    }
+  });
+
+  lightbox?.addEventListener("close", () => {
+    document.body.style.overflow = "";
+  });
+</script>

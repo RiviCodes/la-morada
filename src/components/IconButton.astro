@@ -1,0 +1,31 @@
+---
+interface Props {
+  id?: string;
+  variant: "prev" | "next" | "close";
+  label: string;
+  class?: string;
+}
+
+const { id, variant, label, class: extraClass = "" } = Astro.props;
+
+const paths: Record<string, string> = {
+  prev: "M15 5l-7 7 7 7",
+  next: "M9 5l7 7-7 7",
+  close: "M6 6l12 12M18 6L6 18",
+};
+---
+
+<button
+  id={id}
+  type="button"
+  aria-label={label}
+  class:list={[
+    "rounded-full bg-canvas p-2 text-ink backdrop-blur-sm transition hover:bg-mist select-none",
+    extraClass,
+  ]}
+>
+  <svg viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">
+    <path d={paths[variant]} stroke-linecap="round" stroke-linejoin="round"
+    ></path>
+  </svg>
+</button>

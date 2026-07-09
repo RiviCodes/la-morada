@@ -1,0 +1,107 @@
+---
+function seededRandom(seed: number) {
+  let value = seed;
+  return () => {
+    value = (value * 9301 + 49297) % 233280;
+    return value / 233280;
+  };
+}
+const rand = seededRandom(42);
+const stars = Array.from({ length: 50 }, (_, i) => ({
+  top: `${(rand() * 90).toFixed(1)}%`,
+  left: `${(rand() * 55).toFixed(1)}%`,
+  size: rand() > 0.85 ? 2 : 1,
+  delay: `${(rand() * 6).toFixed(1)}s`,
+  duration: `${(3 + rand() * 4).toFixed(1)}s`,
+}));
+---
+
+<section class="relative overflow-hidden">
+  <!-- Cielo nocturno: solo ocupa el lado izquierdo, donde no tapa la foto -->
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    {
+      stars.map((s) => (
+        <span
+          class="star absolute rounded-full bg-canvas"
+          style={`top:${s.top}; left:${s.left}; width:${s.size}px; height:${s.size}px; animation-delay:${s.delay}; animation-duration:${s.duration};`}
+        />
+      ))
+    }
+  </div>
+
+  <div
+    class="relative mx-auto grid max-w-6xl gap-12 px-6 pb-16 pt-20 md:grid-cols-2 md:items-center md:pt-28"
+  >
+    <!-- Columna de texto -->
+    <div class="relative z-10">
+      <p class="font-mono text-xs uppercase tracking-[0.3em] text-canvas">
+        Luxury · Naturaleza · Descanso
+      </p>
+
+      <h1
+        class="mt-6 text-5xl font-medium tracking-wide leading-[1.05] text-canvas font-display md:text-6xl"
+      >
+        Dormir bajo las estrellas,
+        <span class="tracking-wide text-muted">
+          <span> </span>sin renunciar a la comodidad.</span
+        >
+      </h1>
+
+      <p class="mt-6 max-w-xl text-lg text-canvas font-body tracking-wide">
+        <span class="italic">La Morada Luxury Cabin & Glamp</span> es un refugio de
+        A-Frames y domos en medio del bosque. Mira las fotos más recientes del lugar
+        y elige tu espacio antes de reservar.
+      </p>
+
+      <div class="mt-10 flex flex-wrap items-center gap-4">
+        <a
+          href="#galeria"
+          class="rounded-full bg-canvas px-6 py-3 text-sm
+        font-medium tracking-wide text-ink transition hover:bg-muted"
+        >
+          Ver la galería de fotos
+        </a>
+
+        <a
+          href="#contacto"
+          class="rounded-full border border-white/15 px-6 py-3
+      text-sm font-medium tracking-wide text-mist transition hover:border-canvas hover:text-canvas"
+        >
+          Preguntar disponibilidad
+        </a>
+      </div>
+    </div>
+
+    <div class="relative z-10 aspect-4/5 w-full md:aspect-auto md:h-[520px]">
+      <img
+        src="/hero-aframe.jpeg"
+        alt="Cabaña A-frame de La Morada iluminada al anochecer, entre pinos"
+        class="h-full w-full rounded-md object-cover
+               [mask-image:linear-gradient(to_bottom,transparent_0%,black_28%)]
+               [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_28%)]
+               md:[mask-image:linear-gradient(to_right,transparent_0%,black_30%)]
+               md:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_30%)]"
+      />
+      <div class="pointer-events-none absolute inset-0 rounded-3xl bg-ink/15">
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .star {
+    animation-name: twinkle;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    opacity: 0.2;
+  }
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 0.15;
+    }
+    50% {
+      opacity: 0.9;
+    }
+  }
+</style>

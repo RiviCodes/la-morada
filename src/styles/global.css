@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #09090b; /* zinc-950 */
+  --color-surface: #18181b; /* zinc-900 */
+  --color-line: #27272a; /* zinc-800 */
+  --color-muted: #a1a1aa; /* zinc-400 */
+  --color-mist: #d4d4d8; /* zinc-300 */
+  --color-canvas: #fafafa; /* zinc-50 */
+
+  --font-display: "Fraunces", serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "Space Mono", monospace;
+}

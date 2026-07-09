@@ -1,0 +1,195 @@
+---
+import IconButton from "./IconButton.astro";
+import { getPhotos } from "../lib/getPhotos";
+
+interface Props {
+  name: string;
+  description: string;
+  mainPhoto: string;
+  galleryFolder: string;
+  reverse?: boolean;
+}
+
+const {
+  name,
+  description,
+  mainPhoto,
+  galleryFolder,
+  reverse = false,
+} = Astro.props;
+
+const photos = getPhotos(galleryFolder);
+---
+
+<article class="glamp-unit border-t border-canvas/10 px-6 py-32 md:px-16">
+  <div
+    class={`mx-auto grid max-w-6xl gap-10 px-0 pb-6 md:px-6 md:grid-cols-2 md:items-center ${reverse ? "md:[&>*:first-child]:order-2" : ""}`}
+  >
+    <img
+      src={mainPhoto}
+      alt={name}
+      class="aspect-4/3 outline-2 outline-line outline-offset-5 outline-solid w-full rounded-xl object-cover"
+    />
+
+    <div>
+      <h3 class="text-3xl uppercase text-canvas font-display md:text-4xl">
+        {name}
+      </h3>
+      <p class="mt-3 text-mist">{description}</p>
+    </div>
+  </div>
+
+  {
+    photos.length > 0 && (
+      <div class="relative mx-auto mt-8 max-w-6xl px-6">
+        <div class="carousel-track flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {photos.map((photo, i) => (
+            <button
+              type="button"
+              class="gallery-item aspect-4/3 w-[55%] flex-none snap-start overflow-hidden rounded-xs sm:w-[30%] lg:w-[18%]"
+              data-index={i}
+              aria-label={`Ampliar foto: ${photo.alt}`}
+            >
+              <img
+                src={photo.src}
+                alt={photo.alt}
+                class="h-full w-full object-cover select-none"
+              />
+            </button>
+          ))}
+        </div>
+
+        <IconButton
+          variant="prev"
+          label="Foto anterior"
+          class="js-carousel-prev absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2"
+        />
+        <IconButton
+          variant="next"
+          label="Foto siguiente"
+          class="js-carousel-next absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2"
+        />
+      </div>
+    )
+  }
+
+  <dialog
+    class="lightbox m-auto max-h-[90vh] max-w-[92vw] overflow-hidden border-0 bg-transparent p-0 backdrop:bg-ink/90"
+  >
+    <div
+      class="relative flex max-h-[90vh] max-w-[92vw] items-center justify-center"
+    >
+      <img
+        class="lightbox-img max-h-[85vh] max-w-[90vw] rounded-xs object-contain select-none"
+        src=""
+        alt=""
+      />
+      <IconButton
+        variant="close"
+        label="Cerrar"
+        class="js-lightbox-close absolute top-3 right-3"
+      />
+      <IconButton
+        variant="prev"
+        label="Foto anterior"
+        class="js-lightbox-prev absolute left-3 top-1/2 -translate-y-1/2"
+      />
+      <IconButton
+        variant="next"
+        label="Foto siguiente"
+        class="js-lightbox-next absolute right-3 top-1/2 -translate-y-1/2"
+      />
+    </div>
+  </dialog>
+</article>
+
+<script>
+  document.querySelectorAll<HTMLElement>(".glamp-unit").forEach((unit) => {
+    const items = Array.from(
+      unit.querySelectorAll<HTMLButtonElement>(".gallery-item"),
+    );
+    const photos = items.map((el) => {
+      const img = el.querySelector("img")!;
+      return { src: img.src, alt: img.alt };
+    });
+
+    let currentIndex = 0;
+    let loadToken = 0;
+
+    const track = unit.querySelector<HTMLElement>(".carousel-track");
+    function scrollByOneCard(direction: 1 | -1) {
+      const cardWidth =
+        track?.firstElementChild?.getBoundingClientRect().width ?? 220;
+      track?.scrollBy({
+        left: direction * (cardWidth + 12),
+        behavior: "smooth",
+      });
+    }
+    unit
+      .querySelector(".js-carousel-prev")
+      ?.addEventListener("click", () => scrollByOneCard(-1));
+    unit
+      .querySelector(".js-carousel-next")
+      ?.addEventListener("click", () => scrollByOneCard(1));
+
+    const lightbox = unit.querySelector<HTMLDialogElement>(".lightbox");
+    const lightboxImg = unit.querySelector<HTMLImageElement>(".lightbox-img");
+
+    function showPhoto(index: number) {
+      if (!lightboxImg || photos.length === 0) return;
+      currentIndex = (index + photos.length) % photos.length;
+      const target = photos[currentIndex];
+      const myToken = ++loadToken;
+
+      const preloader = new Image();
+      preloader.src = target.src;
+
+      const applyImage = () => {
+        if (myToken !== loadToken) return;
+        lightboxImg.src = target.src;
+        lightboxImg.alt = target.alt;
+      };
+
+      if (preloader.decode) {
+        preloader.decode().then(applyImage).catch(applyImage);
+      } else {
+        applyImage();
+      }
+    }
+    function openLightbox(index: number) {
+      showPhoto(index);
+      document.body.style.overflow = "hidden";
+      lightbox?.showModal();
+    }
+
+    items.forEach((el, i) =>
+      el.addEventListener("click", () => openLightbox(i)),
+    );
+    unit
+      .querySelector(".js-lightbox-close")
+      ?.addEventListener("click", () => lightbox?.close());
+    unit
+      .querySelector(".js-lightbox-prev")
+      ?.addEventListener("click", () => showPhoto(currentIndex - 1));
+    unit
+      .querySelector(".js-lightbox-next")
+      ?.addEventListener("click", () => showPhoto(currentIndex + 1));
+
+    lightbox?.addEventListener("click", (e) => {
+      if (e.target === lightbox) lightbox.close();
+    });
+    lightbox?.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        showPhoto(currentIndex - 1);
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        showPhoto(currentIndex + 1);
+      }
+    });
+    lightbox?.addEventListener("close", () => {
+      document.body.style.overflow = "";
+    });
+  });
+</script>
