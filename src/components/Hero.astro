@@ -72,15 +72,11 @@ const stars = Array.from({ length: 50 }, (_, i) => ({
       </div>
     </div>
 
-    <div class="relative z-10 aspect-4/5 w-full md:aspect-auto md:h-[520px]">
+    <div class="relative z-10 aspect-square md:h-[520px]">
       <img
         src="/hero-aframe.jpeg"
         alt="Cabaña A-frame de La Morada iluminada al anochecer, entre pinos"
-        class="h-full w-full rounded-md object-cover
-               [mask-image:linear-gradient(to_bottom,transparent_0%,black_28%)]
-               [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_28%)]
-               md:[mask-image:linear-gradient(to_right,transparent_0%,black_30%)]
-               md:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_30%)]"
+        class="h-full w-full rounded-full object-cover"
       />
       <div class="pointer-events-none absolute inset-0 rounded-3xl bg-ink/15">
       </div>
