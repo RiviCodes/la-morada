@@ -1,26 +1,45 @@
-import fs from "node:fs";
-import path from "node:path";
+import type { ImageMetadata } from "astro";
 
-const VALID_EXT = /\.(jpe?g|png|webp)$/i;
+const galleryImages = import.meta.glob<{ default: ImageMetadata }>(
+  "/src/assets/gallery/*.{jpg,jpeg,png,webp}",
+  { eager: true },
+);
+
+const glampImages = import.meta.glob<{ default: ImageMetadata }>(
+  "/src/assets/glamps/**/*.{jpg,jpeg,png,webp}",
+  { eager: true },
+);
 
 export interface Photo {
-  src: string;
+  image: ImageMetadata;
   alt: string;
 }
 
-export function getPhotos(publicSubpath: string): Photo[] {
-  const dir = path.join(process.cwd(), "public", publicSubpath);
+function filenameFromPath(fullPath: string): string {
+  return fullPath.split("/").pop() ?? fullPath;
+}
 
-  try {
-    return fs
-      .readdirSync(dir)
-      .filter((f) => VALID_EXT.test(f))
-      .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
-      .map((f) => ({
-        src: `/${publicSubpath}/${f}`,
-        alt: f.replace(VALID_EXT, "").replace(/[-_]+/g, " "),
-      }));
-  } catch {
-    return [];
-  }
+function toAlt(filename: string): string {
+  return filename.replace(/\.(jpe?g|png|webp)$/i, "").replace(/[-_]+/g, " ");
+}
+
+export function getGalleryPhotos(): Photo[] {
+  return Object.entries(galleryImages)
+    .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
+    .map(([path, mod]) => ({
+      image: mod.default,
+      alt: toAlt(filenameFromPath(path)),
+    }));
+}
+
+export function getGlampPhotos(slug: string): Photo[] {
+  const prefix = `/src/assets/glamps/${slug}/`;
+
+  return Object.entries(glampImages)
+    .filter(([path]) => path.startsWith(prefix))
+    .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
+    .map(([path, mod]) => ({
+      image: mod.default,
+      alt: toAlt(filenameFromPath(path)),
+    }));
 }
