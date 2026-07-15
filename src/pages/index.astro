@@ -5,6 +5,7 @@ import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import Gallery from "../components/Gallery.astro";
 import GlampUnit from "../components/GlampUnit.astro";
+import aFrameMain from "../assets/glamps/a-frame/main.jpeg";
 ---
 
 <Layout>
@@ -14,7 +15,7 @@ import GlampUnit from "../components/GlampUnit.astro";
   <GlampUnit
     name="'La Morada' A-Frame"
     description="Cabaña de dos niveles con ventanales de piso a techo, ideal para 2-4 personas."
-    mainPhoto="/glamps/a-frame/main.jpeg"
-    galleryFolder="glamps/a-frame"
+    mainPhoto={aFrameMain}
+    galleryFolder="a-frame"
   />
 </Layout>
