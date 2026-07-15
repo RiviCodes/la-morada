@@ -1,11 +1,13 @@
 ---
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+import { getGlampPhotos } from "../lib/getPhotos";
 import IconButton from "./IconButton.astro";
-import { getPhotos } from "../lib/getPhotos";
 
 interface Props {
   name: string;
   description: string;
-  mainPhoto: string;
+  mainPhoto: ImageMetadata;
   galleryFolder: string;
   reverse?: boolean;
 }
@@ -18,14 +20,14 @@ const {
   reverse = false,
 } = Astro.props;
 
-const photos = getPhotos(galleryFolder);
+const photos = getGlampPhotos(galleryFolder);
 ---
 
 <article class="glamp-unit border-t border-canvas/10 px-6 py-32 md:px-16">
   <div
     class={`mx-auto grid max-w-6xl gap-10 px-0 pb-6 md:px-6 md:grid-cols-2 md:items-center ${reverse ? "md:[&>*:first-child]:order-2" : ""}`}
   >
-    <img
+    <Image
       src={mainPhoto}
       alt={name}
       class="aspect-4/3 outline-2 outline-line outline-offset-5 outline-solid w-full rounded-xl object-cover"
@@ -50,8 +52,8 @@ const photos = getPhotos(galleryFolder);
               data-index={i}
               aria-label={`Ampliar foto: ${photo.alt}`}
             >
-              <img
-                src={photo.src}
+              <Image
+                src={photo.image}
                 alt={photo.alt}
                 class="h-full w-full object-cover select-none"
               />

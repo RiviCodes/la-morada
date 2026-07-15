@@ -1,8 +1,9 @@
 ---
 import IconButton from "./IconButton.astro";
-import { getPhotos } from "../lib/getPhotos";
+import { Image } from "astro:assets";
+import { getGalleryPhotos } from "../lib/getPhotos";
 
-const photos = getPhotos("gallery");
+const photos = getGalleryPhotos();
 ---
 
 <section id="galeria" class="py-24">
@@ -30,8 +31,8 @@ const photos = getPhotos("gallery");
                 data-index={i}
                 aria-label={`Ampliar foto: ${photo.alt}`}
               >
-                <img
-                  src={photo.src}
+                <Image
+                  src={photo.image}
                   alt={photo.alt}
                   class="h-full w-full object-cover select-none"
                 />
