@@ -1,4 +1,6 @@
 ---
+import { Image } from "astro:assets";
+import logo from "../assets/logo.png";
 const WHATSAPP_NUMBER = "527971000165"; // TODO: tu número real, formato 52 + 10 dígitos, sin espacios ni signos
 const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("¡Hola! Vi el sitio de La Morada y me gustaría más información 🌲")}`;
 ---
@@ -8,8 +10,12 @@ const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent
 >
   <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
     <a href="/" class="flex flex-col items-center">
-      <img src="/logo.png" alt="Logo de La Morada" class="h-auto w-7" />
-      <img src="/banner.png" alt="" class="h-auto w-22 pl-2" />
+      <Image
+        src={logo}
+        alt="Logo de La Morada"
+        quality={90}
+        class="h-auto w-24"
+      />
     </a>
 
     <nav
