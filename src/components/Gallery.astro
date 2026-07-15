@@ -1,6 +1,6 @@
 ---
 import IconButton from "./IconButton.astro";
-import { Image } from "astro:assets";
+import { Picture } from "astro:assets";
 import { getGalleryPhotos } from "../lib/getPhotos";
 
 const photos = getGalleryPhotos();
@@ -31,9 +31,11 @@ const photos = getGalleryPhotos();
                 data-index={i}
                 aria-label={`Ampliar foto: ${photo.alt}`}
               >
-                <Image
+                <Picture
                   src={photo.image}
                   alt={photo.alt}
+                  formats={["avif", "webp"]}
+                  quality={70}
                   class="h-full w-full object-cover select-none"
                 />
               </button>
