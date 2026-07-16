@@ -6,6 +6,7 @@ import Hero from "../components/Hero.astro";
 import Gallery from "../components/Gallery.astro";
 import GlampUnit from "../components/GlampUnit.astro";
 import aFrameMain from "../assets/glamps/a-frame/main.jpeg";
+import DomoMain from "../assets/glamps/domo/main.jpg";
 ---
 
 <Layout>
@@ -24,6 +25,21 @@ import aFrameMain from "../assets/glamps/a-frame/main.jpeg";
       { icon: "shower", label: "Baño completo" },
       { icon: "minisplit", label: "Mini split" },
       { icon: "kindle", label: "Terraza con fogatero" },
+      { icon: "wifi", label: "WiFi" },
+    ]}
+  />
+  <GlampUnit
+    name="'La Morada' Domo"
+    unitType="Domo"
+    description="Domo de un nivel, ideal para 2-4 personas"
+    mainPhoto={DomoMain}
+    galleryFolder="domo"
+    features={[
+      { icon: "bed", label: "Cama Queen size" },
+      { icon: "sofa", label: "Sofa cama" },
+      { icon: "shower", label: "Baño completo" },
+      { icon: "minisplit", label: "Mini split" },
+      { icon: "grid", label: "Red flotante" },
       { icon: "wifi", label: "WiFi" },
     ]}
   />
