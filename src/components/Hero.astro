@@ -17,7 +17,6 @@ const stars = Array.from({ length: 50 }, (_, i) => ({
 ---
 
 <section class="relative overflow-hidden">
-  <!-- Cielo nocturno: solo ocupa el lado izquierdo, donde no tapa la foto -->
   <div class="pointer-events-none absolute inset-0" aria-hidden="true">
     {
       stars.map((s) => (
@@ -32,7 +31,6 @@ const stars = Array.from({ length: 50 }, (_, i) => ({
   <div
     class="relative mx-auto grid max-w-6xl gap-12 px-6 pb-16 pt-20 md:grid-cols-2 md:items-center md:pt-28"
   >
-    <!-- Columna de texto -->
     <div class="relative z-10">
       <p
         class="font-mono text-xxs sm:text-xs uppercase tracking-[0.3em] text-canvas"
