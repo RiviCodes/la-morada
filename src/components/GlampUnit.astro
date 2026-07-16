@@ -48,13 +48,13 @@ const photos = getGlampPhotos(galleryFolder);
           {unitType}
         </span>
       </h3>
-      <p class="mt-3 text-mist">{description}</p>
+      <p class="mt-6 text-mist">{description}</p>
 
       {
         features.length > 0 && (
-          <ul class="mt-5 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 sm:grid-flow-col sm:grid-rows-3">
+          <ul class="mt-6 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 sm:grid-flow-col sm:grid-rows-3">
             {features.map(({ icon, label }) => (
-              <li class="flex items-center gap-2 text-sm text-mist">
+              <li class="mt-1 flex items-center gap-2 text-sm text-mist">
                 <span
                   class="h-5 w-5 text-canvas [&>svg]:h-full [&>svg]:w-full"
                   set:html={featureIcons[icon]}
