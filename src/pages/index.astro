@@ -7,6 +7,7 @@ import Gallery from "../components/Gallery.astro";
 import GlampUnit from "../components/GlampUnit.astro";
 import aFrameMain from "../assets/glamps/a-frame/main.jpeg";
 import DomoMain from "../assets/glamps/domo/main.jpg";
+import LuminaMain from "../assets/glamps/lumina/main.jpg";
 ---
 
 <Layout>
@@ -31,16 +32,30 @@ import DomoMain from "../assets/glamps/domo/main.jpg";
   <GlampUnit
     name="'La Morada' Domo"
     unitType="Domo"
-    description="Domo de un nivel, ideal para 2-4 personas"
+    description="Domo de un nivel, ideal para 2-4 personas."
     mainPhoto={DomoMain}
     galleryFolder="domo"
     features={[
-      { icon: "bed", label: "Cama Queen size" },
-      { icon: "sofa", label: "Sofa cama" },
+      { icon: "bed", label: "Cama & Sofa cama" },
       { icon: "tub", label: "Tina" },
       { icon: "shower", label: "Baño completo" },
       { icon: "minisplit", label: "Mini split" },
       { icon: "grid", label: "Red flotante" },
+      { icon: "wifi", label: "WiFi" },
+    ]}
+  />
+  <GlampUnit
+    name="'La Morada' Lumina"
+    unitType="Lumumina"
+    description="A-frame de un nivel, ideal para parejas."
+    mainPhoto={LuminaMain}
+    galleryFolder="lumina"
+    features={[
+      { icon: "bed", label: "Cama Queen size" },
+      { icon: "jacuzzi", label: "Jacuzzi" },
+      { icon: "shower", label: "Baño completo" },
+      { icon: "fan", label: "Ventilador de torre" },
+      { icon: "kindle", label: "Fogatero" },
       { icon: "wifi", label: "WiFi" },
     ]}
   />
